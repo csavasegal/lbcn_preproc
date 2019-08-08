@@ -28,6 +28,8 @@ for i = 1:length(block_names)
             n_stim_per_trial = 1;
         case 'VTCLoc'
             n_stim_per_trial = 1;
+         case 'ReadNumWord'
+            n_stim_per_trial = 1;   
     end
     
     %% Load globalVar
@@ -113,10 +115,21 @@ for i = 1:length(block_names)
     %get osnets from diode
     pdio_dur= pdio_offset - pdio_onset;
     IpdioI= [pdio_onset(2:end)-pdio_offset(1:end-1) 0];
-    isi_ind = find(IpdioI > 0.1);
-    clear stim_offset stim_onset
-    stim_offset= [pdio_offset(isi_ind) pdio_offset(end)];
-    stim_onset= [pdio_onset(isi_ind) pdio_onset(end)];
+    
+    if strcmp(sbj_name, 'S16_96_LF') && strcmp(bn, 'E16-429_0015')
+        isi_ind = 1:length(IpdioI);
+        clear stim_offset stim_onset
+        stim_offset= [pdio_offset(isi_ind)];
+        stim_onset= [pdio_onset(isi_ind)];        
+    else
+        isi_ind = find(IpdioI > 0.1);
+        clear stim_offset stim_onset
+        stim_offset= [pdio_offset(isi_ind) pdio_offset(end)];
+        stim_onset= [pdio_onset(isi_ind) pdio_onset(end)];        
+        
+    end
+    
+
     % stim_onset = [stim_onset(1:115) stim_onset(117:end)];
     % stim_offset = [stim_offset(1:115) stim_offset(117:end)];
     
@@ -208,7 +221,7 @@ all_stim_onset = EventIdentifierExceptions_oneTrialLess(all_stim_onset,sbj_name,
 
 % Add another exception for subjects who have additional photo/trigger trials in the middle
 % and visual inspection shows good correspondence between photo/trigger and psychtoolbox output
-all_stim_onset = EventIdentifierExceptions_extraTrialsMiddle(all_stim_onset, StimulusOnsetTime, sbj_name, project_name, bn);
+%all_stim_onset = EventIdentifierExceptions_extraTrialsMiddle(all_stim_onset, StimulusOnsetTime, sbj_name, project_name, bn);
 
 
 

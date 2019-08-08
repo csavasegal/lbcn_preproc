@@ -37,7 +37,7 @@ for bi = 1:length(block_names)
     trialinfo = table;
     trials = K.trials;
     if strcmp(sbj_name,'S12_43_HH') && strcmp(bn,'HH-13');
-        ntrials = 30; %issues with timing for 31
+        ntrials = 29; %issues with timing for 31
     else
         ntrials = length(K.trials);
     end 

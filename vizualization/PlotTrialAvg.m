@@ -106,7 +106,7 @@ for ci = 1:ncategs
         if size(data.trialinfo.allonsets,2) > 1
             time_events = cumsum(nanmean(diff(data.trialinfo.allonsets,1,2)));
             for i = 1:length(time_events)
-                plot([time_events(i) time_events(i)],ylim,'Color', [.5 .5 .5], 'LineWidth',1)
+                plot([time_events(i) time_events(i)],ylim,'Color', [.5 .5 .5], 'LineWidth',1);
             end
         else
             
@@ -169,6 +169,7 @@ if ~plot_params.single_trial
     else
         time_events = plot_params.xlines;
     end
+    time_events = plot_params.xlines;
     for i = 1:length(time_events)
         plot([time_events(i) time_events(i)],y_lim,'Color', [.5 .5 .5], 'LineWidth',1)
     end

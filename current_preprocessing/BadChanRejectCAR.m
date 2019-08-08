@@ -143,7 +143,7 @@ for i = 1:length(bns)
         elseif isempty(find(pathological_chan_id == ii)) && ~isempty(find(globalVar.badChan == ii))
             color_plot = [0 0 1];
         end
-        plot(zscore(data_all(:,ii))+ii, 'Color', color_plot);
+       plot(zscore(data_all(:,ii))+ii, 'Color', color_plot);
     end
     title('All bad electrodes')
     xlabel('Time (s)')
