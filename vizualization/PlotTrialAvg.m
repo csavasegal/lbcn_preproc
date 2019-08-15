@@ -159,18 +159,23 @@ if ~plot_params.single_trial
     set(gca,'fontsize',plot_params.textsize)
     box off
     
-    %% Plot lines to mark events
+   %% Plot lines to mark events
     y_lim = ylim;
     if isempty(plot_params.xlines)
         if size(data.trialinfo.allonsets,2) > 1
             time_events = cumsum(nanmean(diff(data.trialinfo.allonsets,1,2)));
         else
+            time_events = [0 0];
         end
     else
         time_events = plot_params.xlines;
     end
-    for i = 1:length(time_events)
-        plot([time_events(i) time_events(i)],y_lim,'Color', [.5 .5 .5], 'LineWidth',1)
+    
+    if ~isempty(time_events)
+        for i = 1:length(time_events)
+            plot([time_events(i) time_events(i)],y_lim,'Color', [.5 .5 .5], 'LineWidth',1)
+        end
+    else
     end
     
     

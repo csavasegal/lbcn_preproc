@@ -28,8 +28,12 @@ for i = 1:length(block_names)
             n_stim_per_trial = 1;
         case 'VTCLoc'
             n_stim_per_trial = 1;
-         case 'ReadNumWord'
-            n_stim_per_trial = 1;   
+        case 'ReadNumWord'
+            n_stim_per_trial = 1;
+        case 'Logo'
+            n_stim_per_trial = 1;
+        case 'SevenHeaven'
+            n_stim_per_trial = 1;
     end
     
     %% Load globalVar
@@ -177,7 +181,7 @@ for i = 1:length(block_names)
     colnames = trialinfo.Properties.VariableNames;
     ntrials = size(trialinfo,1);
 
-    if strcmp(project_name, 'Calculia') || strcmp(project_name, 'Context') || strcmp(project_name, 'Scrambled') || strcmp(project_name, 'MMR') || strcmp(project_name, 'UCLA') || strcmp(project_name, 'MFA')
+    if strcmp(project_name, 'Calculia') || strcmp(project_name, 'Context') || strcmp(project_name, 'Scrambled') || strcmp(project_name, 'MMR') || strcmp(project_name, 'UCLA') || strcmp(project_name, 'MFA') || strcmp(project_name, 'Logo')
         % Add other kind of exceptions for when there is more triggers in the end - Calculia
         [stim_onset,stim_offset] = StimOnsetExceptions(sbj_name,bn,stim_onset,stim_offset);
         all_stim_onset = EventIdentifierExceptions_moreTriggers(stim_onset, stim_offset, sbj_name, project_name, bn);
