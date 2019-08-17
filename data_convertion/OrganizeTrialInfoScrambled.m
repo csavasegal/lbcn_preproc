@@ -51,8 +51,13 @@ for i = 1:length(block_names)
         else
             sbj_resp(i)= NaN;
         end
-
+        
+        %check this
+%         if strcmp(K.theData(i).keys, 'NaN')
+%             trialinfo.keys{i} = K.theData(i).keys
+%         else 
         trialinfo.keys{i} = K.theData(i).keys(1);
+
         trialinfo.RT(i,1) = K.theData(i).RT(1); % Becase some cases had 2 equal values for RT in the same trial
         trialinfo.StimulusOnsetTime(i,1) = K.theData(i).flip.StimulusOnsetTime;
         cond= [K.conds(i)]';

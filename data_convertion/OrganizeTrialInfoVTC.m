@@ -16,21 +16,37 @@ for ci = 1:length(block_names)
     soda_name = dir(fullfile(globalVar.psych_dir, 'sodata*.mat'));
     K = load([globalVar.psych_dir '/' soda_name.name]);
     
-    
+    sbj_name_split = strsplit(sbj_name, '_');
+    sbj_ind = sbj_name_split{2};
+    sbj_number = str2num(sbj_ind);
     % start trialinfo
-    trialinfo = table;
-%     ntrials = K.trial;
-%     [K,ntrials] = OrganizeTrialInfoVTCExceptions(sbj_name,bn,K,ntrials);
-    K.theData = K.theData(K.starttrial:K.endtrial);
-    ntrials = (K.endtrial - K.starttrial) +1;
     
+    trialinfo = table;
+    if sbj_number < 96 %CHECK THIS NUMBER
+        ntrials = K.trial;
+    elseif sbj_number > 95
+        K.theData = K.theData(K.starttrial:K.endtrial);
+        ntrials = (K.endtrial - K.starttrial) +1;
+    else
+    end
+%     trialinfo = table;
+%     ntrials = K.trial;
+% %     [K,ntrials] = OrganizeTrialInfoVTCExceptions(sbj_name,bn,K,ntrials);
+% %    K.theData = K.theData(K.starttrial:K.endtrial);
+% %    ntrials = (K.endtrial - K.starttrial) +1;
+%     
     for i = 1:ntrials
         
         
         if isfield(K.theData(i), 'red') %for older patients
             trialinfo.isActive(i) = 0;
             if ~isempty(K.theData(i).red.RT) %only get key when there is a reaction time
-                trialinfo.RT(i,1) = K.theData(i).red.RT;
+                trialinfo.RT(i,1) = K.theData(i).red.RT(1);
+                if iscell(K.theData(i).red.keys)
+                    K.theData(i).red.keys = cell2mat((K.theData(i).red.keys(1)));
+                else
+                end 
+                    
                 
                 temp_key = num2str(K.theData(i).red.keys);
                 switch temp_key
@@ -43,6 +59,8 @@ for ci = 1:length(block_names)
                     case '2@'
                         K.theData(i).red.keys='2';
                     case '1!'
+                        K.theData(i).red.keys='1';
+                    case 'ENTER'
                         K.theData(i).red.keys='1';
                 end
                 trialinfo.keys(i) = str2num(K.theData(i).red.keys);
@@ -64,7 +82,9 @@ for ci = 1:length(block_names)
                 trialinfo.keys{i}={NaN};
             end
             
-            if K.theData(i).RT==0
+            if K.theData(i).RT==0 
+                trialinfo.RT(i)=NaN;
+            elseif isempty(K.theData(i).RT)
                 trialinfo.RT(i)=NaN;
             else
                 trialinfo.RT(i) = K.theData(i).RT(1);
@@ -217,7 +237,7 @@ for ci = 1:length(block_names)
             elseif num==1033
                 trialinfo.stim{i} = '339';
             elseif num==1034
-                trialinfo.stim(i) = "362";
+                trialinfo.stim{i} = '362';
             elseif num==1035
                 trialinfo.stim{i} = '406';
             elseif num==1036
@@ -248,10 +268,12 @@ for ci = 1:length(block_names)
                 trialinfo.stim{i} = '725';
             elseif num==08
                 trialinfo.stim{i} = '892';
+            elseif num==09
+                trialinfo.stim{i} = '938';
             else
             end
         else
-            trialinfo.stim(i) = strcat(trialinfo.condNames{i},'_',num_temp);
+            trialinfo.stim{i} = strcat(trialinfo.condNames{i},'_',num_temp);
         end
         
         
