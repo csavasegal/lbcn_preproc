@@ -21,8 +21,10 @@ for i = 1:length(block_names)
     
     
     %% Thresholding the signal
-    if strcmp(project_name, 'EglyDriver_stim')
+    if strcmp(project_name, 'EglyDriver_stim') && ~strcmp(sbj_name,'S19_142_EA')
         ind_above= pdio < 0.02;
+    elseif strcmp(project_name, 'EglyDriver_stim') && strcmp(sbj_name,'S19_142_EA')
+        ind_above= pdio > 4.2;
     else
         ind_above= pdio > 0.5;
     end
@@ -45,10 +47,17 @@ for i = 1:length(block_names)
     pdio_offset(1:n_initpulse_offset)=[]; %
     clear n_initpulse_onset; clear n_initpulse_offset;
     
+    if strcmp(project_name, 'EglyDriver_stim') || strcmp(sbj_name,'S19_142_EA')
+        pdio_onset(361) = [];
+    else
+    end
+    
+    
     %get osnets from diode
     pdio_dur= pdio_offset - pdio_onset;
     IpdioI= [pdio_onset(2:end)-pdio_offset(1:end-1) 0];
-    isi_ind = find(IpdioI <0.1);
+    %isi_ind = find(IpdioI <0.1);
+    isi_ind = find(IpdioI >0.1);
     clear stim_offset stim_onset
     stim_offset= [pdio_offset(isi_ind) pdio_offset(end)];
     stim_onset= [pdio_onset(isi_ind) pdio_onset(end)];

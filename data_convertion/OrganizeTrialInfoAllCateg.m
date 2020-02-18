@@ -131,7 +131,7 @@ for i = 1:length(block_names)
                 trialinfo.stim{i} = '6';
                 %trialinfo.stim_lett{i} = 'NaN';
             elseif strcmp(num_temp,'07')|| strcmp(num_temp,'16')|| strcmp(num_temp,'25')|| strcmp(num_temp,'34')
-                trialinfo.stim{i} = '7';
+                trialinfo.stim{i} = '7';f
                 %trialinfo.stim_lett{i} = 'NaN';
             elseif strcmp(num_temp,'08')|| strcmp(num_temp,'17')|| strcmp(num_temp,'26')|| strcmp(num_temp,'35')
                 trialinfo.stim{i} = '8';

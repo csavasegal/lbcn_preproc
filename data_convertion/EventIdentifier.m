@@ -34,6 +34,14 @@ for i = 1:length(block_names)
             n_stim_per_trial = 1;
         case 'SevenHeaven'
             n_stim_per_trial = 1;
+        case 'WFA_iES'
+            n_stim_per_trial = 1;
+        case 'WFA_iES_control'
+            n_stim_per_trial = 1;
+        case 'race_encoding'
+            n_stim_per_trial = 2;
+        case 'race_encoding_simple'
+            n_stim_per_trial = 2;
     end
     
     %% Load globalVar
@@ -76,8 +84,11 @@ for i = 1:length(block_names)
         ind_above= pdio > 2.7;
         
     elseif strcmp(sbj_name,'S19_137_AF') &&  (strcmp(bn, 'E19-380_0081') || strcmp(bn, 'E19-380_0083'))
-        ind_above= pdio > 2;        
-        
+        ind_above= pdio > 2;    
+    elseif strcmp(sbj_name,'S19_142_EA') &&  (strcmp(bn, 'E19-786_0094')) || (strcmp(bn, 'E19-786_0095'))
+        ind_above= pdio > 4.5;        
+    elseif strcmp(sbj_name,'S19_142_EA') &&  (strcmp(bn, 'E19-786_0097')) || (strcmp(bn, 'E19-786_0104'))
+        ind_above= pdio > 2.5; 
     else
         ind_above= pdio > 0.5;
     end
@@ -112,7 +123,15 @@ for i = 1:length(block_names)
     
     
     if strcmp(sbj_name,'S19_137_AF') && strcmp(project_name,'EglyDriver_stim')
-        pdio_onset= pdio_onset(1:216);    
+        pdio_onset= pdio_onset(1:216);
+    elseif strcmp(sbj_name,'S19_142_EA') && (strcmp(bn, 'E19-786_0094'))  %for WFA Ies
+        pdio_onset= pdio_onset(1:236);
+    elseif strcmp(sbj_name,'S19_142_EA') && (strcmp(bn, 'E19-786_0095'))  %for WFA Ies
+        pdio_onset= pdio_onset(1:233);
+    elseif strcmp(sbj_name,'S19_142_EA') && (strcmp(bn, 'E19-786_0097'))  %for WFA Ies
+        pdio_onset= pdio_onset(1:120);
+    elseif strcmp(sbj_name,'S19_142_EA') && (strcmp(bn, 'E19-786_0104'))  %for WFA Ies
+        pdio_onset= pdio_onset(1:end-1);
     else
     end
     
