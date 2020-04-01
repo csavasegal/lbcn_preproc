@@ -42,6 +42,9 @@ for i = 1:length(block_names)
             n_stim_per_trial = 2;
         case 'race_encoding_simple'
             n_stim_per_trial = 2;
+      case 'GradCPT'
+            n_stim_per_trial = 1;
+            
     end
     
     %% Load globalVar
@@ -246,6 +249,9 @@ all_stim_onset = EventIdentifierExceptions_oneTrialLess(all_stim_onset,sbj_name,
 % and visual inspection shows good correspondence between photo/trigger and psychtoolbox output
 %all_stim_onset = EventIdentifierExceptions_extraTrialsMiddle(all_stim_onset, StimulusOnsetTime, sbj_name, project_name, bn);
 
+% if strcmp(sbj_name, 'C18_49') && strcmp(bn,'GradCPT_2') || strcmp(bn,'GradCPT_3') || strcmp(bn,'GradCPT_4') || strcmp(bn,'GradCPT_1') 
+%     all_stim_onset = StimulusOnsetTime
+% end
 
 
 %% Plot comparison photo/trigger 

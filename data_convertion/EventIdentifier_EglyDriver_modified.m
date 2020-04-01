@@ -1,4 +1,4 @@
-function EventIdentifier_EglyDriver (sbj_name, project_name, block_names, dirs, pdio_chan)
+function EventIdentifier_EglyDriver_modified(sbj_name, project_name, block_names, dirs, pdio_chan)
 %% Globar Variable elements
 
 %% loop across blocks
@@ -21,12 +21,8 @@ for i = 1:length(block_names)
     
     
     %% Thresholding the signal
-    
-    
     if strcmp(project_name, 'EglyDriver_stim')
         ind_above= pdio < 0.02;
-    elseif strcmp(project_name, 'EglyDriver_stim') && strcmp(sbj_name, 'S19_142_EA')
-        ind_above= pdio > 20;
     else
         ind_above= pdio > 0.5;
     end
@@ -107,23 +103,47 @@ for i = 1:length(block_names)
 %     else
 %         pdio_onset([end]) = [];
 %     end
+
+%% THIS MODIFICATION WAS DONE TO ACCOUNT FOR THE FACT THAT IN THE TRIALS WITH NO TARGET THERE IS NO TRIGGER. 
+% WEIRDLY there seems to be a different between psychtoolbox and trigger channel, to double check
     hold on
     plot(pdio_onset*globalVar.Pdio_rate,0.9*ones(length(pdio_onset),1),'r*');
 %     plot(pdio_offset*globalVar.Pdio_rate,0.9*ones(length(pdio_offset),1),'g*');    
 
 
-    n_stim_per_trial = 5;
-    allonsets = reshape(pdio_onset,n_stim_per_trial,length(pdio_onset)/n_stim_per_trial)';    
-    alloffsets = reshape(pdio_offset,n_stim_per_trial,length(pdio_offset)/n_stim_per_trial)';
-
+    n_stim_per_trial = 6;
+    pdio_onset_corr = nan(size(trialinfo,1) * 6, 1)';
+    pdio_offset_corr = nan(size(trialinfo,1) * 6, 1)';
     
+    count = 1;
+    count_corr = 1;
+
+    for i = 1:size(trialinfo,1)
+        if ~isnan(trialinfo.targ_pos(i))
+            ntrig(i) = 6;
+        else
+            ntrig(i) = 5;
+        end
+        
+        if i > 1 && ntrig(i-1) == 5
+            count_corr = count_corr + 1;
+            pdio_onset_corr(count_corr:count_corr+ntrig(i)-1) = pdio_onset(count:count+ntrig(i)-1);
+            count = count+ntrig(i);
+        else
+            pdio_onset_corr(count_corr:count_corr+ntrig(i)-1) = pdio_onset(count:count+ntrig(i)-1);
+            count = count+ntrig(i)-1;
+        end
+        count_corr = count_corr+ntrig(i);
+    end
+    allonsets = reshape(pdio_onset_corr,n_stim_per_trial,size(trialinfo,1))';    
+
     
     
 %% Plot comparison photo/trigger 
-StimulusOnsetTime = trialinfo.stimulus_onset_time(:,3); % **
+StimulusOnsetTime = trialinfo.stimulus_onset_time(:,4); % **
 
 df_SOT= diff(StimulusOnsetTime);
-df_stim_onset = diff(allonsets(:,3));
+df_stim_onset = diff(allonsets(:,4));
 
 %plot overlay
 subplot(2,3,4)

@@ -114,10 +114,16 @@ for i = 1:length(block_names)
     trialinfo.condNotAfterMtn = cell(ntrials,1);
     trialinfo.condNotAfterMtn(mountain_ind)={'mtn'};
     trialinfo.condNotAfterMtn(city_ind)={'city'};
-    
+   
+%      if strcmp(sbj_name, 'C19_62')
+%         if size(trialinfo,1)==450
+%             trialinfo(450,:) = [];
+%         end
+%     end
     % Save
     save([globalVar.psych_dir '/trialinfo_', bn '.mat'], 'trialinfo');
     disp(['block ',num2str(i)])
+    
 end
 
 end

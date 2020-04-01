@@ -7,7 +7,7 @@ function PlotCoverageElect(subjVar, cfg)
 
 load('cdcol_2018.mat')
 marker_size = 20;
-marker_size_high = 15;
+marker_size_high = 30;
 
 
 
@@ -38,12 +38,12 @@ for i = 1:size(subjVar.elinfo,1)
     init = subjVar.elinfo.FS_label{i}(1:2)
     MarkerFaceColor(i,:) = cols(find(strcmp(init, elec_init)),:)
     MarkerFaceColor(i,:) = [0 0 0];
-
+    %MarkerFaceColor(i,:) = [0 0 0];
     
 end
 
 
-figure('units', 'normalized', 'outerposition', figureDim)
+figure('units', 'normalized', 'outerposition', figureDim);
 
 % figure('units', 'normalized', 'outerposition', figureDim)
 views = {'lateral', 'anterior', 'posterior'};

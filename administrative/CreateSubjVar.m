@@ -9,10 +9,9 @@ function [subjVar, subjVar_created]  = CreateSubjVar(sbj_name, comp_root, server
 % Sometimes the empty means cut channel (literaly physically cut from the grid)
 
 % Maybe remove this after
-%data_format = GetFSdataFormat(sbj_name, 'Stanford');
-[fs_iEEG, fs_Pdio, data_format] = GetFSdataFormat(sbj_name, 'Stanford');
+[~, ~, data_format] = GetFSdataFormat(sbj_name, 'Stanford');
 dirs = InitializeDirs('MMR', sbj_name, comp_root, server_root, code_root); % 'Pedro_NeuroSpin2T'
-%sprintf('creating subjVar for subject %s', sbj_name)
+sprintf('creating subjVar for subject %s', sbj_name)
 
 
 if strcmp(data_format, 'edf')
@@ -106,6 +105,7 @@ elseif sum(in_chan_cmp) == length(in_chan_cmp) && sum(in_fs) < length(in_fs)
     
     MGRID_coord_tmp = nan(nchan_cmp,3,1);
     MGRID_coord_tmp(in_fs,:) = MGRID_coord;
+    %clear MGRID_coord;
     MGRID_coord = MGRID_coord_tmp;
 
     

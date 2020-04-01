@@ -95,7 +95,12 @@ switch table
             case 'math_selective_only'
                 GID = '486842448';
          end
-        
+    case 'Beijing_China'
+        DOCID = '1ukMue_vc69c5XwrrOKQ9ll59P_qhs3QHYT3fh0kmPVM';
+        switch sheet
+            case 'Beijing_freesurfer'
+                GID = '0';
+        end
 end
 
 end
