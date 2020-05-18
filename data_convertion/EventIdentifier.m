@@ -42,8 +42,15 @@ for i = 1:length(block_names)
             n_stim_per_trial = 2;
         case 'race_encoding_simple'
             n_stim_per_trial = 2;
-      case 'GradCPT'
+        case 'GradCPT'
             n_stim_per_trial = 1;
+        case 'race_faces'
+            n_stim_per_trial = 2;
+        case 'emotional_faces'
+            n_stim_per_trial = 3;
+        case 'MFA'
+            n_stim_per_trial = 1;
+            
             
     end
     
@@ -80,18 +87,18 @@ for i = 1:length(block_names)
         pdio = abs(pdio);
         ind_above= pdio > 2;
         
-%     elseif strcmp(project_name, 'Calculia_production_stim')
-%         ind_above= pdio > 2.2;
+        %     elseif strcmp(project_name, 'Calculia_production_stim')
+        %         ind_above= pdio > 2.2;
         
     elseif strcmp(sbj_name,'S19_137_AF') &&  (strcmp(bn, 'E19-380_0078') || strcmp(bn, 'E19-380_0079'))
         ind_above= pdio > 2.7;
         
     elseif strcmp(sbj_name,'S19_137_AF') &&  (strcmp(bn, 'E19-380_0081') || strcmp(bn, 'E19-380_0083'))
-        ind_above= pdio > 2;    
+        ind_above= pdio > 2;
     elseif strcmp(sbj_name,'S19_142_EA') &&  (strcmp(bn, 'E19-786_0094')) || (strcmp(bn, 'E19-786_0095'))
-        ind_above= pdio > 4.5;        
+        ind_above= pdio > 4.5;
     elseif strcmp(sbj_name,'S19_142_EA') &&  (strcmp(bn, 'E19-786_0097')) || (strcmp(bn, 'E19-786_0104'))
-        ind_above= pdio > 2.5; 
+        ind_above= pdio > 2.5;
     else
         ind_above= pdio > 0.5;
     end
@@ -108,7 +115,7 @@ for i = 1:length(block_names)
         onset= onset(1:20);
         offset = offset(1:20);
     else
-    end 
+    end
     
     pdio_onset= onset/globalVar.Pdio_rate;
     pdio_offset= offset/globalVar.Pdio_rate;
@@ -118,7 +125,7 @@ for i = 1:length(block_names)
     else
     end
     
-
+    
     % %remove onset flash
     pdio_onset(1:n_initpulse_onset)=[]; % Add in calculia production the finisef to experiment to have 12 pulses
     pdio_offset(1:n_initpulse_offset)=[]; %
@@ -146,16 +153,16 @@ for i = 1:length(block_names)
         isi_ind = 1:length(IpdioI);
         clear stim_offset stim_onset
         stim_offset= [pdio_offset(isi_ind)];
-        stim_onset= [pdio_onset(isi_ind)];        
+        stim_onset= [pdio_onset(isi_ind)];
     else
         isi_ind = find(IpdioI > 0.1);
         clear stim_offset stim_onset
         stim_offset= [pdio_offset(isi_ind) pdio_offset(end)];
-        stim_onset= [pdio_onset(isi_ind) pdio_onset(end)];        
+        stim_onset= [pdio_onset(isi_ind) pdio_onset(end)];
         
     end
     
-
+    
     % stim_onset = [stim_onset(1:115) stim_onset(117:end)];
     % stim_offset = [stim_offset(1:115) stim_offset(117:end)];
     
@@ -202,12 +209,12 @@ for i = 1:length(block_names)
     %% Get trials, insturuction onsets
     colnames = trialinfo.Properties.VariableNames;
     ntrials = size(trialinfo,1);
-
+    
     if strcmp(project_name, 'Calculia') || strcmp(project_name, 'Context') || strcmp(project_name, 'Scrambled') || strcmp(project_name, 'MMR') || strcmp(project_name, 'UCLA') || strcmp(project_name, 'MFA') || strcmp(project_name, 'Logo')
         % Add other kind of exceptions for when there is more triggers in the end - Calculia
         [stim_onset,stim_offset] = StimOnsetExceptions(sbj_name,bn,stim_onset,stim_offset);
         all_stim_onset = EventIdentifierExceptions_moreTriggers(stim_onset, stim_offset, sbj_name, project_name, bn);
-        stim_onset = all_stim_onset;                                  
+        stim_onset = all_stim_onset;
         all_stim_onset = reshape(stim_onset,n_stim_per_trial,length(stim_onset)/n_stim_per_trial)';
         %% modified for Memoria
     elseif strcmp(project_name, 'Memoria')
@@ -225,118 +232,143 @@ for i = 1:length(block_names)
         all_stim_onset = reshape(stim_onset,n_stim_per_trial,length(stim_onset)/n_stim_per_trial)';
     end
     
-
-%%
-% Plot photodiode segmented data
-figureDim = [0 0 1 1];
-figure('units', 'normalized', 'outerposition', figureDim)
-subplot(2,3,1:3)
-hold on
-plot(pdio)
-title(bn, 'interpreter', 'none')
-
-% Event onset
-plot(stim_onset*globalVar.Pdio_rate,0.9*ones(length(stim_onset),1),'r*');
-
-plot(all_stim_onset*globalVar.Pdio_rate,0.9*ones(length(all_stim_onset),1),'r*');
-
-%% Comparing photodiod with behavioral data
-% Add another exception for subjects who have 1 trialinfo less
-all_stim_onset = EventIdentifierExceptions_oneTrialLess(all_stim_onset,sbj_name, project_name, bn);
-%StimulusOnsetTime = EventIdentifierExceptions_TrialLessStimOnsetTime(StimulusOnsetTime, sbj_name,project_name, bn);
-
-% Add another exception for subjects who have additional photo/trigger trials in the middle
-% and visual inspection shows good correspondence between photo/trigger and psychtoolbox output
-%all_stim_onset = EventIdentifierExceptions_extraTrialsMiddle(all_stim_onset, StimulusOnsetTime, sbj_name, project_name, bn);
-
-% if strcmp(sbj_name, 'C18_49') && strcmp(bn,'GradCPT_2') || strcmp(bn,'GradCPT_3') || strcmp(bn,'GradCPT_4') || strcmp(bn,'GradCPT_1') 
-%     all_stim_onset = StimulusOnsetTime
-% end
-
-
-%% Plot comparison photo/trigger 
-df_SOT= diff(StimulusOnsetTime)';
-df_stim_onset = diff(all_stim_onset(:,1))';
-
-%plot overlay
-subplot(2,3,4)
-plot(df_SOT,'o','MarkerSize',8,'LineWidth',3) % psychtoolbox
-hold on
-plot(df_stim_onset,'r*') % photodiode/trigger
-df= df_SOT - df_stim_onset;
-
-%% Plot diffs, across experiment and histogram
-subplot(2,3,5)
-plot(df);
-title('Diff. behavior diode (exp)');
-xlabel('Trial number');
-ylabel('Time (ms)');
-subplot(2,3,6)
-hist(df)
-title('Diff. behavior diode (hist)');
-xlabel('Time (ms)');
-ylabel('Count');
-
-%flag large difference
-if ~all(abs(df)<.1)
-    warning('behavioral data and photodiod mismatch')
-%     prompt = ['behavioral data and photodiod mismatch. Accept it? (y or n):'] ;
-%     ID = input(prompt,'s');
-%     if strcmp(ID, 'y')
-%     else
-%        error('Mismatch not accepted.') 
+    
+    %%
+    % Plot photodiode segmented data
+    figureDim = [0 0 1 1];
+    figure('units', 'normalized', 'outerposition', figureDim)
+    subplot(2,3,1:3)
+    hold on
+    plot(pdio)
+    title(bn, 'interpreter', 'none')
+    
+    % Event onset
+    plot(stim_onset*globalVar.Pdio_rate,0.9*ones(length(stim_onset),1),'r*');
+    
+    plot(all_stim_onset*globalVar.Pdio_rate,0.9*ones(length(all_stim_onset),1),'r*');
+    
+    %% Comparing photodiod with behavioral data
+    % Add another exception for subjects who have 1 trialinfo less
+    all_stim_onset = EventIdentifierExceptions_oneTrialLess(all_stim_onset,sbj_name, project_name, bn);
+    %StimulusOnsetTime = EventIdentifierExceptions_TrialLessStimOnsetTime(StimulusOnsetTime, sbj_name,project_name, bn);
+    
+    % Add another exception for subjects who have additional photo/trigger trials in the middle
+    % and visual inspection shows good correspondence between photo/trigger and psychtoolbox output
+    %all_stim_onset = EventIdentifierExceptions_extraTrialsMiddle(all_stim_onset, StimulusOnsetTime, sbj_name, project_name, bn);
+    
+    % if strcmp(sbj_name, 'C18_49') && strcmp(bn,'GradCPT_2') || strcmp(bn,'GradCPT_3') || strcmp(bn,'GradCPT_4') || strcmp(bn,'GradCPT_1')
+    %     all_stim_onset = StimulusOnsetTime
+    % end
+    
+    % this was added here by Clara 2020
+%     for i=1:length(all_stim_onset)
+%         %all_stim_onset(2:end) = test(i+1)
+%         test(1,1) = all_stim_onset(1)
+%         test(i+1,1) = all_stim_onset(i)+df_SOT(i)
+%         %test(i+1,1) = all_stim_onset(i)+df_stim_onset(i)
 %     end
-end
-
-%flag large difference in timing
-if all(mean(df)>1)
-    warning('delay between photodiode & psychtoolbox is greater than 1 ms!!')
-    prompt = ['There is a problematic delay! Accept it? (y or n):'] ;
-    ID = input(prompt,'s');
-    if strcmp(ID, 'y')
-    else
-       error('Mismatch not accepted.') 
+%     df_stim_onset = diff(test(:,1))';
+%     all_stim_onset = test;
+    
+    %% Plot comparison photo/trigger
+    df_SOT= diff(StimulusOnsetTime)';
+    df_stim_onset = diff(all_stim_onset(:,1))';
+    
+    %plot overlay
+    subplot(2,3,4)
+    plot(df_SOT,'o','MarkerSize',8,'LineWidth',3) % psychtoolbox
+    hold on
+    plot(df_stim_onset,'r*') % photodiode/trigger
+    df= df_SOT - df_stim_onset;
+    
+    %% Plot diffs, across experiment and histogram
+    subplot(2,3,5)
+    plot(df);
+    title('Diff. behavior diode (exp)');
+    xlabel('Trial number');
+    ylabel('Time (ms)');
+    subplot(2,3,6)
+    hist(df)
+    title('Diff. behavior diode (hist)');
+    xlabel('Time (ms)');
+    ylabel('Count');
+    
+    %flag large difference
+    if ~all(abs(df)<.1)
+        warning('behavioral data and photodiod mismatch')
+        %     prompt = ['behavioral data and photodiod mismatch. Accept it? (y or n):'] ;
+        %     ID = input(prompt,'s');
+        %     if strcmp(ID, 'y')
+        %     else
+        %        error('Mismatch not accepted.')
+        %     end
     end
-end
-
-%% Updating the events with onsets
-if ismember('nstim',colnames)
-    nstim = trialinfo.nstim;
-else
-    if exist('n_stim_per_trial')
-        trialinfo.nstim = repmat(n_stim_per_trial, size(trialinfo,1), 1);
-    else
-        trialinfo.nstim = repmat(size(trialinfo.allonsets,2),size(trialinfo.allonsets,1),1);
+    
+    %flag large difference in timing
+    if all(mean(df)>1)
+        warning('delay between photodiode & psychtoolbox is greater than 1 ms!!')
+        prompt = ['There is a problematic delay! Accept it? (y or n):'] ;
+        ID = input(prompt,'s');
+        if strcmp(ID, 'y')
+        else
+            error('Mismatch not accepted.')
+        end
     end
-end
-
-trialinfo.allonsets(event_trials,:) = all_stim_onset;
-trialinfo.RT_lock = nan(ntrials,1);
-for ti = 1:size(trialinfo,1)
-    trialinfo.RT_lock(ti) = trialinfo.RT(ti) + trialinfo.allonsets(ti,trialinfo.nstim(ti));
-end
-trialinfo.allonsets(rest_trials,:) = (trialinfo.StimulusOnsetTime(rest_trials,:)-trialinfo.StimulusOnsetTime(rest_trials-1,:))+trialinfo.allonsets(rest_trials-1,:);
-
-
-%% Exception for when only the first onset is detected in calculia. 
-% if strcmp(bn, 
-% 
-% else
-% end
-
-%% Account for when recording started in the middle of photodiode signal
-if trialinfo.allonsets(1) == 0
-    warning('First trial excluded, since recording started in the middle of the photidiode signal')
-else
-end
-trialinfo = trialinfo(trialinfo.allonsets(:,1) ~= 0,:);
-
-
-%% Update trialinfo
-disp('updating trialinfo')
-fn= sprintf('%s/trialinfo_%s.mat',globalVar.psych_dir,bn);
-save(fn, 'trialinfo');
-
-
-% close all
+    
+    %% Updating the events with onsets
+    if ismember('nstim',colnames)
+        nstim = trialinfo.nstim;
+    else
+        if exist('n_stim_per_trial')
+            trialinfo.nstim = repmat(n_stim_per_trial, size(trialinfo,1), 1);
+        else
+            trialinfo.nstim = repmat(size(trialinfo.allonsets,2),size(trialinfo.allonsets,1),1);
+        end
+    end
+    
+    trialinfo.allonsets(event_trials,:) = all_stim_onset;
+    trialinfo.RT_lock = nan(ntrials,1);
+    for ti = 1:size(trialinfo,1)
+        trialinfo.RT_lock(ti) = trialinfo.RT(ti) + trialinfo.allonsets(ti,trialinfo.nstim(ti));
+    end
+    trialinfo.allonsets(rest_trials,:) = (trialinfo.StimulusOnsetTime(rest_trials,:)-trialinfo.StimulusOnsetTime(rest_trials-1,:))+trialinfo.allonsets(rest_trials-1,:);
+    
+    
+    %% Exception for when only the first onset is detected in calculia.
+    % if strcmp(bn,
+    %
+    % else
+    % end
+    
+    %% Account for when recording started in the middle of photodiode signal
+    if trialinfo.allonsets(1) == 0
+        warning('First trial excluded, since recording started in the middle of the photidiode signal')
+    else
+    end
+    trialinfo = trialinfo(trialinfo.allonsets(:,1) ~= 0,:);
+    
+    %% Exception for race_faces - Clara
+    if strcmp(project_name, 'race_faces')
+        if size(trialinfo.allonsets,2)==2
+            warning('making a change to allonsets!')
+            trialinfo.allonsets2 = trialinfo.allonsets;
+            trialinfo.allonsets = trialinfo.allonsets(:,2);
+        else
+        end
+    elseif strcmp(project_name, 'emotional_faces')
+        if size(trialinfo.allonsets,2)==3
+            warning('making a change to allonsets!')
+            trialinfo.allonsets2 = trialinfo.allonsets;
+            trialinfo.allonsets = trialinfo.allonsets(:,2);
+        else
+        end
+    end
+    
+    %% Update trialinfo
+    disp('updating trialinfo')
+    fn= sprintf('%s/trialinfo_%s.mat',globalVar.psych_dir,bn);
+    save(fn, 'trialinfo');
+    
+    
+    % close all
 end

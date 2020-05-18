@@ -17,6 +17,8 @@ for i = 1:length(block_names)
     for i = 1:length(K.theData)
         trialinfo.keys{i,1} = vertcat(K.theData(i).keys);
     end
+    
+    
     for i = 1:length(K.theData)
         trialinfo.RT(i,1) = K.theData(i).RT(1); % Becase some cases had 2 equal values for RT in the same trial
     end    

@@ -45,7 +45,9 @@ for bi = 1:length(block_names)
     %% initiate trialinfo
     trialinfo = table;
     if isfield(K,'wlistInfo') == 1
-        if strcmp(sbj_name, 'S16_94_DR') == 1
+        if strcmp(sbj_name, 'S16_94_DR') == 1 && ~strcmp(bn,'E16-168_0022')
+            %mistake Clara 2020, the second block is Active. This is
+            %confirmed in the calculia_blocktype function
             trialinfo.isActive = vertcat(K.wlistInfo(:).isActive);
             trialinfo.isActive = zeros(ntrials,1);
         else

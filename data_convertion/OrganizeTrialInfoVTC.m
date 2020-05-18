@@ -248,8 +248,9 @@ for ci = 1:length(block_names)
                 trialinfo.stim{i} = '610';
             elseif num==1039
                 trialinfo.stim{i} = '841';
-            elseif num==1032
+            elseif num==1040
                 trialinfo.stim{i} = '972';
+                
                 
                 %for older version
             elseif num==01
@@ -306,9 +307,17 @@ for ci = 1:length(block_names)
             trialinfo(381:end,:) = [];
         else
         end
+     end
+        %% added 2020 April Clara to fix the passive blocks for red- make the RT and the keys NaN
+%      for i = 1:size(trialinfo,1)
+%          if isnan(trialinfo.oneback(i))
+%              trialinfo.RT(i) = NaN;
+%              trialinfo.keys(i) = NaN;
+%              trialinfo.RT_lock(i) = NaN;
+%          else 
+%          end
+%      end
         
-        
-    end
     save([globalVar.psych_dir '/trialinfo_', bn '.mat'], 'trialinfo');
 end
 end

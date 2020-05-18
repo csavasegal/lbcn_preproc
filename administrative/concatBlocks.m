@@ -27,6 +27,12 @@ for bi = 1:length(block_names)
     
     load(sprintf('%s/%siEEG_%s_%s_%.2d.mat',dir_in,freq_band,tag,bn,el));
     
+    %% Specifics of each project
+    % Complement or fix ttrialinfo
+    data.trialinfo = CompTrialinfo(data.trialinfo, project_name);
+    data.trialinfo.block = cell(height(data.trialinfo),1);
+    data.trialinfo.block(:) = {bn}; % keep track of which trials coming from which block
+
     % concatenante EEG data across blocks
     for i = 1:length(concatfields)
         if strcmp(datatype,'Spec')
@@ -34,76 +40,6 @@ for bi = 1:length(block_names)
         else
             data_all.(concatfields{i}) = cat(1,data_all.(concatfields{i}),data.(concatfields{i}));
         end
-    end
-    data.trialinfo.block = cell(height(data.trialinfo),1);
-    data.trialinfo.block(:) = {bn}; % keep track of which trials coming from which block
-    
-    % Specifics of each project
-    switch project_name
-        case 'Calculia'
-            data.trialinfo.keys = [];
-            for i = 1:size(data.trialinfo,1)
-                if data.trialinfo.isActive(i) == 1
-                    data.trialinfo.condNames(i) = {[data.trialinfo.condNames{i} '_active']};
-                else
-                    data.trialinfo.condNames(i) = {[data.trialinfo.condNames{i} '_passive']};
-                end
-            end
-            
-        case 'MMR'
-            for i = 1:size(data.trialinfo,1)
-                if data.trialinfo.isCalc(i) == 1
-                    if data.trialinfo.AbsDeviant(i) == 0
-                        data.trialinfo.correctness{i} = 'correct';
-                    elseif data.trialinfo.AbsDeviant(i) > 0
-                        data.trialinfo.correctness{i} = 'incorrect';
-                    else
-                    end
-                else
-                    data.trialinfo.correctness{i} = 'no math';
-                end
-            end
-            
-        case 'Context'
-            data.trialinfo.condNames2 = data.trialinfo.condNames;
-            data.trialinfo.condNamesBasic = data.trialinfo.condNames;
-            for i = 1:size(data.trialinfo,1)
-                if data.trialinfo.isActive(i) == 1
-                    data.trialinfo.condNames(i) = {[data.trialinfo.condition{i} '_active']};
-                    data.trialinfo.condNamesBasic(i) = {'active'};
-                else
-                    data.trialinfo.condNames(i) = {[data.trialinfo.condition{i} '_passive']};
-                    data.trialinfo.condNamesBasic(i) = {'passive'};
-                end
-            end
-            
-        case 'EglyDriver'
-            %             interval_tmp = discretize(data.trialinfo.int_cue_targ_time, 5);
-            %             data.trialinfo.condNames_interval = cellstr(num2str(interval_tmp));
-            for i = 1:size(data.trialinfo,1)
-                if data.trialinfo.cue_pos(i) == 1 || data.trialinfo.cue_pos(i) == 2
-                    data.trialinfo.CondNamesCueLoc{i} = 'cue_left';
-%                     data.trialinfo.CondNamesCueLoc{i} = [data.trialinfo.CondNames{i} '_left'];
-                else
-                    data.trialinfo.CondNamesCueLoc{i} = 'cue_right';
-                end
-                
-                
-                
-            end
-            data.trialinfo.response_time(data.trialinfo.response_time == 0) = nan;
-            
-            
-            
-        case 'EglyDriver_stim'
-            for i = 1:size(data.trialinfo,1)
-                if data.trialinfo.TTL(i,3) == 128
-                    data.trialinfo.CondNames{i} = [data.trialinfo.CondNames{i} '_stim'];
-                else
-                    data.trialinfo.CondNames{i} = [data.trialinfo.CondNames{i} '_nostim'];
-                end
-            end
-            
     end
     
     % concatenate trial info across blocks

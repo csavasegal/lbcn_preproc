@@ -131,7 +131,7 @@ for ei = 1:length(elecs)
     else
         tagchan = ' (good)';
     end
-    
+        
     if plot_params.multielec % if  multiple elecs in same figure (will group all conditions together)
         load([dirs.original_data filesep  sbj_name filesep 'subjVar_'  sbj_name '.mat']);
         

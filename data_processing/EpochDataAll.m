@@ -179,6 +179,8 @@ pTS = globalVar.pathological_event_bipolar_montage;
 bad_indices_HFO = cellfun(@(x) round(x./(globalVar.iEEG_rate)), bad_indices_HFO, 'UniformOutput',false); %%% CHECK THAT
 
 % Su method 1: reject based on spikes in LF and HF components of signal
+% For no responses, set Data_Car nan to 0... 
+data_CAR.wave(isnan(data_CAR.wave)) = 0;
 [be.bad_epochs_raw_LFspike, filtered_beh,spkevtind,spkts_raw_LFspike] = LBCN_filt_bad_trial(data_CAR.wave',data_CAR.fsample);
 % Amy method: reject based on outliers of the raw signal and jumps (i.e.
 % difference between consecutive data points)
@@ -192,7 +194,9 @@ if strcmp(datatype,'Spec')
     %if spectral data, average across frequency dimension before epoch rejection
     [be.bad_epochs_spec_HFspike, filtered_beh,spkevtind,spkts_spec_HFspike] = LBCN_filt_bad_trial(squeeze(nanmean(abs(data.wave),1))',data.fsample);
 else % CAR or HFB (i.e. 1 frequency)
-    [be.bad_epochs_spec_HFspike, filtered_beh,spkevtind,spkts_spec_HFspike] = LBCN_filt_bad_trial(data.wave',data.fsample);
+    wave_temp = data.wave';
+    wave_temp(isnan(wave_temp)) = 0;
+    [be.bad_epochs_spec_HFspike, filtered_beh,spkevtind,spkts_spec_HFspike] = LBCN_filt_bad_trial(wave_temp,data.fsample);
 end
 %%%%%%%%%%%% NOTE on Su's code %%%%%%%%%%%%%%
 % If the trial is classified as bad, there are no bad indices, since the full trial should be excluded. 
@@ -247,12 +251,13 @@ end
 %% Inspect bad epochs
 be.bad_epochs_HFO = data.trialinfo.bad_epochs_HFO;
 %     InspectBadEpochs(bad_epochs_raw, spkevtind, spkts, data_CAR.wave', data.fsample);
-
+% if epoch_params.compare_bad
 CompareBadEpochs(be, data_CAR, data, datatype, bn, el, globalVar)
-
+% else
+% end
 %% Run baseline correction (either calculate from data if locktype = stim or uses these values when locktype = 'resp')
 if strcmp(datatype, 'CAR')
-    epoch_params.blc.run = 0;
+%     epoch_params.blc.run = 0;
 else
 end
 
@@ -294,5 +299,3 @@ disp(['Data epoching: Block ', bn, ' ' bl_tag,' Elec ',num2str(el)])
 % save(fn,'globalVar')
 
 end
-
-

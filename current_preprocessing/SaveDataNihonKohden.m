@@ -10,8 +10,8 @@ for i = 1:length(block_name)
     fn = sprintf('%s/originalData/%s/global_%s_%s_%s.mat',dirs.data_root,sbj_name,project_name,sbj_name,bn);
     load(fn,'globalVar');
     
-    data_dir = [dirs.original_data '/' sbj_name '/' bn]; % directory for saving data
-    fname =  [dirs.original_data '/' sbj_name '/' bn '/' bn '.edf'];
+    data_dir = [dirs.original_data filesep sbj_name filesep bn]; % directory for saving data
+    fname =  [dirs.original_data filesep sbj_name filesep bn filesep bn '.edf'];
     
     if strcmp(globalVar.center, 'Stanford')
         [hdr, D] = edfread(fname);
@@ -21,32 +21,41 @@ for i = 1:length(block_name)
     end
     
     %% Add Exception for when channels don' have labels
-    hdr.label =  hdr.label(~strcmp(hdr.label, 'POL')); 
+    hdr.label =  hdr.label(~strcmp(hdr.label, 'POL'));
     D = D(~strcmp(hdr.label, 'POL'),:);
-            
+    hdr.label =strrep(hdr.label,'`','''');
     fs = size(D,2)/(hdr.records * hdr.duration);
-    % hdr.records = number of chuncks 
-    % hdr.duration = duration of each chunck 
+    % hdr.records = number of chuncks
+    % hdr.duration = duration of each chunck
     
     % Downsampling parameters
-    target_fs = 1000; % 
-    target_fs_comp = round(target_fs/5); % reduced fs for spectral data 
+    target_fs = 1000; %
+    target_fs_comp = round(target_fs/5); % reduced fs for spectral data
     
     if fs <= target_fs
         ecog_ds = 1;
     else
         ecog_ds = round(fs/target_fs); % decimate factor
     end
-    pdio_ds = 1; %downsample for photodiode signals
-
+    
+     pdio_ds = 1; % do not downsample for photodiode signals
+    pdio_ds=ecog_ds; %downsample for photodiode signals
+    
     % Take the indices of the channels of interest
     pdio_oldinds = find(contains(hdr.label, 'DC'));
-    pdio_newinds = [1:length(pdio_oldinds)]; %how to save data
-    ecog_oldinds = find(~contains(hdr.label, 'EKG') & ~contains(hdr.label, 'DC') & ~contains(hdr.label, 'REF') & ~contains(hdr.label, 'Annotations')); %index in EDF file
-    ecog_newinds = 1:length(ecog_oldinds);
+    pdio_newinds = 1:length(pdio_oldinds); %how to save data
     
-    % Maybe add A64, which 
-
+    %     ecog_oldinds = find(~contains(hdr.label, '$')&~contains(hdr.label, 'DEL')&~contains(hdr.label, 'EMG')&~contains(hdr.label, 'EKG') & ~contains(hdr.label, 'DC') & ~contains(hdr.label, 'EF') & ~contains(hdr.label, 'Annotations')...
+    %         &~ contains(hdr.label,'ELG') & ~ contains (hdr.label,'BP')& ~ strcmp(hdr.label,'POLE')); %index in EDF file
+    %
+    if  strcmp(globalVar.center, 'Stanford')
+        ecog_oldinds = find(~contains(hdr.label, 'EKG') & ~contains(hdr.label, 'DC') & ~contains(hdr.label, 'REF') & ~contains(hdr.label, 'Annotations')); %index in EDF file
+        
+    elseif strcmp(globalVar.center, 'China')
+        chan_tmp= regexp(hdr.label,'^(EEG|POL)[A-Z]{1}(''?)+[0-9]{1,2}','match');
+        ecog_oldinds=find(cellfun(@isempty,chan_tmp)==0);
+    end
+    ecog_newinds = 1:length(ecog_oldinds); 
     % Loop across channels
     channame = cell(size(ecog_newinds));
     for ei = 1:length(ecog_oldinds)
@@ -58,7 +67,8 @@ for i = 1:length(block_name)
         fp = sprintf('%s/iEEG%s_%s.mat',data_dir,bn,chanlbl);
         wave = squeeze(D(ecog_oldinds(ei),:,1));
         if (ecog_ds > 1)
-            wave = decimate(double(wave),ecog_ds);
+            wave = decimate(double(wave),ecog_ds,'fir');
+            %wave = downsample(double(wave),ecog_ds);
         end
         % Clean channel name
         channame_tpm = hdr.label{ecog_oldinds(ei)};
@@ -70,18 +80,23 @@ for i = 1:length(block_name)
             channame{ei} = strrep(channame_tpm,'-Ref','');
         else
             channame{ei} = strrep(channame_tpm,'Ref','');
-        end    
+        end
         save(fp,'wave','fs','channame')
         disp(['Saving chan ',chanlbl,' ',channame{ei}])
     end
     
-    
+    dclabel=hdr.label(pdio_oldinds);
     for pi = 1:length(pdio_oldinds)
-        chanlbl = ['0',num2str(pdio_newinds(pi))];
+        if strcmp(globalVar.center, 'Stanford')
+            chanlbl = ['0',num2str(pdio_newinds(pi))];
+        else
+            chanlbl=dclabel{pi}(end-1:end);
+        end
         fp = sprintf('%s/Pdio%s_%s.mat',data_dir,bn,chanlbl);
         anlg = squeeze(D(pdio_oldinds(pi),:,1));
         if (pdio_ds > 1)
-            anlg = decimate(double(anlg),pdio_ds);
+            anlg = decimate(double(anlg),pdio_ds,'fir');
+            % anlg = downsample(double(anlg),ecog_ds);
         end
         save(fp,'anlg','fs')
         disp(['Saving pdio ',chanlbl])
@@ -101,10 +116,22 @@ for i = 1:length(block_name)
     globalVar.chanLength = length(wave);
     globalVar.nchan = length(globalVar.channame);
     globalVar.refChan = refChan;
-    globalVar.epiChan = epiChan; 
+    globalVar.epiChan = epiChan;
     globalVar.emptyChan = emptyChan;
     
     save(fn,'globalVar');
     disp('globalVar updated')
-
+    
 end
+© 2020 GitHub, Inc.
+Terms
+Privacy
+Security
+Status
+Help
+Contact GitHub
+Pricing
+API
+Training
+Blog
+About

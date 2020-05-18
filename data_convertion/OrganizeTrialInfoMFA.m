@@ -1,4 +1,4 @@
-function OrganizeTrialInfoMFA(sbj_name, project_name, block_names, dirs)
+opfunction OrganizeTrialInfoMFA(sbj_name, project_name, block_names, dirs)
 
 for i = 1:length(block_names)
     bn = block_names{i};
@@ -20,6 +20,26 @@ for i = 1:length(block_names)
     % different
     if sum(idx == 0) > 0 
         [~,idx] = ismember(K.stimlist,stim_key.filename2); 
+    end
+    
+    %added Clara 2020 to fix
+    for i=1:size(trialinfo,1)
+        temp_key = num2str(K.theData(i).keys);
+        switch temp_key
+            case 'DownArrow'
+                K.theData(i).keys='2';
+            case 'End'
+                K.theData(i).keys='1';
+            case 'noanswer'
+                K.theData(i).keys='NaN';
+            case '2@'
+                K.theData(i).keys='2';
+            case '1!'
+                K.theData(i).keys='1';
+            case 'ENTER'
+                K.theData(i).keys='1';
+        end
+        %trialinfo.keys(i) = str2num(K.theData(i).keys);
     end
     
     %getting correct keys

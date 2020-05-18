@@ -9,7 +9,7 @@ for i = 1:length(block_names)
     
     % Load behavioral file
     soda_name = dir(fullfile(globalVar.psych_dir, 'sodata*.mat'));
-    K = load([globalVar.psych_dir '/' soda_name.name]); 
+    K = load([globalVar.psych_dir '/' soda_name.name]);
     
     % start trialinfo
     trialinfo = table;
@@ -27,11 +27,11 @@ for i = 1:length(block_names)
         if isempty(K.theData(i).keys)
             K.theData(i)=[];
         else
-        end 
-    end 
+        end
+    end
     
     for i = 1:ntrials
-         if ~isempty(K.theData(i).keys)
+        if ~isempty(K.theData(i).keys)
             trialinfo.keys{i}=K.theData(i).keys;
         else
             trialinfo.keys{i}={NaN};
@@ -45,9 +45,9 @@ for i = 1:length(block_names)
         trialinfo.StimulusOnsetTime(i,1) = K.theData(i).flip.StimulusOnsetTime;
         trialinfo.conds(i) = K.conds(i);
         trialinfo.stimlist(i) = K.wlist(i)';
-    end 
-        
-
+    end
+    
+    
     for i=1:ntrials
         if K.conds(i)==1
             trialinfo.condNames{i}='number';
@@ -60,16 +60,15 @@ for i = 1:length(block_names)
         elseif K.conds(i)==5
             trialinfo.condNames{i}='pseudoword';
         else
-        end 
-    end 
+        end
+    end
     
     if strcmp(sbj_name, 'S12_42_NC') && strcmp(bn, 'NC_02')
         trialinfo(156:200,:) = [];
     else
     end
-end 
-    
-        save([globalVar.psych_dir '/trialinfo_', bn '.mat'], 'trialinfo')
-    end
-    
-  
+end
+
+save([globalVar.psych_dir '/trialinfo_', bn '.mat'], 'trialinfo')
+end
+
