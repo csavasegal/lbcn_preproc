@@ -94,9 +94,11 @@ for i = 1:length(block_name)
         end
         fp = sprintf('%s/Pdio%s_%s.mat',data_dir,bn,chanlbl);
         anlg = squeeze(D(pdio_oldinds(pi),:,1));
-        if (pdio_ds > 1)
-            anlg = decimate(double(anlg),pdio_ds,'fir');
-            % anlg = downsample(double(anlg),ecog_ds);
+        if ~strcmp(project_name,'Calculia_production')
+            if (pdio_ds > 1)
+                anlg = decimate(double(anlg),pdio_ds,'fir');
+                % anlg = downsample(double(anlg),ecog_ds);
+            end
         end
         save(fp,'anlg','fs')
         disp(['Saving pdio ',chanlbl])
@@ -123,15 +125,3 @@ for i = 1:length(block_name)
     disp('globalVar updated')
     
 end
-© 2020 GitHub, Inc.
-Terms
-Privacy
-Security
-Status
-Help
-Contact GitHub
-Pricing
-API
-Training
-Blog
-About

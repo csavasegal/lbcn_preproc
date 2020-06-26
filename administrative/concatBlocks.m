@@ -26,6 +26,7 @@ for bi = 1:length(block_names)
     dir_in = [dirs.data_root,filesep,datatype,'Data',filesep,freq_band,filesep,sbj_name,filesep,bn,filesep,'EpochData'];
     
     load(sprintf('%s/%siEEG_%s_%s_%.2d.mat',dir_in,freq_band,tag,bn,el));
+    %load('/Volumes/CSS_backup/data/neuralData/BandData/HFB/C18_37/RACE_1/EpochData/HFBiEEG_stimlock_bl_corr_RACE_1_176.mat')
     
     %% Specifics of each project
     % Complement or fix ttrialinfo

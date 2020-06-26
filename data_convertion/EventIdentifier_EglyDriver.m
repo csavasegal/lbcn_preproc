@@ -112,7 +112,7 @@ for i = 1:length(block_names)
 %     plot(pdio_offset*globalVar.Pdio_rate,0.9*ones(length(pdio_offset),1),'g*');    
 
 
-    n_stim_per_trial = 5;
+    n_stim_per_trial = 6;
     allonsets = reshape(pdio_onset,n_stim_per_trial,length(pdio_onset)/n_stim_per_trial)';    
     alloffsets = reshape(pdio_offset,n_stim_per_trial,length(pdio_offset)/n_stim_per_trial)';
 

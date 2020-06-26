@@ -36,7 +36,11 @@ for i = 1:length(block_names)
                 case 'S19_145_PC'
                     race = 3;
                 case 'S20_148_SM'
-                    race = 3;
+                    race = 3
+                case 'S20_149_DR'
+                    race = 3
+                case 'S20_150_CM'
+                    race = 3
             end
         else
             error('Please define the race condition of patient; race = 1 for Asian, race = 2 for Black, race = 3 for white')
@@ -83,6 +87,8 @@ for i = 1:length(block_names)
             gender = 1;
         elseif strcmp(sbj_name, 'S20_148_SM')
             gender = 1;
+        elseif strcmp(sbj_name,'S20_150_CM')
+            gender = 1;
         elseif strcmp(sbj_name, 'C18_32')
             gender = 1;
         elseif strcmp(sbj_name, 'C18_33')
@@ -106,6 +112,8 @@ for i = 1:length(block_names)
         elseif strcmp(sbj_name, 'C19_62')
             gender = 2;
         elseif strcmp(sbj_name, 'C18_37')
+            gender = 1;
+        elseif strcmp(sbj_name, 'S20_149_DR')
             gender = 1;
         else
             error('Please define the gender info of patient; female = 1, male = 2')
@@ -194,6 +202,10 @@ for i = 1:length(block_names)
                     race = 3;
                 case 'S20_148_SM'
                     race = 3;
+                case 'S20_149_DR'
+                    race = 3;
+                case 'S20_150_CM'
+                    race = 3;
             end
         else
             error('Please define the race condition of patient; race = 1 for Asian, race = 2 for Black, race = 3 for white')
@@ -264,6 +276,8 @@ for i = 1:length(block_names)
             gender = 2;
         elseif strcmp(sbj_name, 'C18_37')
             gender = 1;
+        elseif strcmp(sbj_name, 'S20_149_DR')
+            
         else
             error('Please define the gender info of patient; female = 1, male = 2')
         end

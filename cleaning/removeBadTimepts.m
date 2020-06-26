@@ -46,6 +46,3 @@ for fi = 1:length(otherfields)
     dataNew.(otherfields{fi})=data.(otherfields{fi});
 end
 
-
-
-

@@ -7,7 +7,12 @@ for i = 1:length(block_names)
     load(sprintf('%s/originalData/%s/global_%s_%s_%s.mat',dirs.data_root,sbj_name,project_name,sbj_name,bn));
     
     % Load behavioral file
-    soda_name = dir(fullfile(globalVar.psych_dir, 'PT*.mat'));
+    if strcmp(center,'China')
+        soda_name = dir(fullfile(globalVar.psych_dir, 'PT*.mat'));
+    elseif strcmp(center , 'Stanford')
+        soda_name = dir(fullfile(globalVar.psych_dir, 'S*.mat'));
+    end
+    
     %% start from here
     K = load([globalVar.psych_dir '/' soda_name.name]); % block 55 %% FIND FILE IN THE FOLDER AUTO
     
@@ -15,6 +20,8 @@ for i = 1:length(block_names)
     
     if strcmp(center,'China')
         race = 1;
+    elseif strcmp(center , 'Stanford') || strcmp(sbj_name, 'S20_149_DR')
+        race = 3;
     end
     %race = repmat(race,108,1);
     if strcmp(sbj_name, 'C18_28')
@@ -76,6 +83,8 @@ for i = 1:length(block_names)
     elseif strcmp(sbj_name, 'C19_62')
         gender = 2;
     elseif strcmp(sbj_name, 'C18_37')
+        gender = 1;
+    elseif strcmp(sbj_name, 'S20_149_DR')
         gender = 1;
     else
         error('Please define the gender info of patient; female = 1, male = 2')
