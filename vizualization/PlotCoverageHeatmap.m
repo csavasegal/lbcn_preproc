@@ -23,10 +23,7 @@ cmcortex.right = cortex;
 decimate = true;
 final_fs = 50;
 
-cfg.decimate = true;
-cfg.final_fs = 50;
-%concat_params = genConcatParams(decimate, final_fs);
-concat_params = genConcatParams(project_name,cfg)
+concat_params = genConcatParams(decimate, final_fs);
 concat_params.noise_method = 'trials';
 block_names = BlockBySubj(sbj_name,project_name);
 data_sbj = ConcatenateAll(sbj_name,project_name,block_names,dirs,[],'Band','HFB','stim', concat_params);

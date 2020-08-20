@@ -44,8 +44,16 @@ for bi = 1:length(block_names)
     end
     
     % concatenate trial info across blocks
-    data_all.trialinfo = [data_all.trialinfo; data.trialinfo];
-    
+     % concatenate trial info across blocks
+     if sum(strcmp(data.trialinfo.Properties.VariableNames, 'allstimdur')) > 0
+         data.trialinfo.allstimdur = [];
+     else
+     end
+     data_all.trialinfo = [data_all.trialinfo; data.trialinfo];
+     if sum(strcmp(data_all.trialinfo.Properties.VariableNames, 'allstimdur')) > 0
+         data_all.trialinfo.allstimdur = [];
+     else
+     end
     
     
 end
