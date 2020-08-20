@@ -41,7 +41,10 @@ for i = 1:length(views)
         % Only plot on the relevant hemisphere
         if (strcmp(hemis{i}, 'left') == 1 && coords_plot(ii,1) > 0) || (strcmp(hemis{i}, 'right') == 1 && coords_plot(ii,1) < 0)
         else
-            plot3(coords_plot(ii,1),coords_plot(ii,2),coords_plot(ii,3), 'o', 'MarkerSize', cfg.MarkerSize, 'MarkerFaceColor', cfg.MarkerFaceColor(ii,:), 'MarkerEdgeColor', cfg.MarkerEdgeColor(ii,:));
+            %plot3(coords_plot(ii,1),coords_plot(ii,2),coords_plot(ii,3), 'o', 'MarkerSize', cfg.MarkerSize, 'MarkerFaceColor', cfg.MarkerFaceColor(ii,:), 'MarkerEdgeColor', cfg.MarkerEdgeColor(ii,:));
+            %Clara change temp
+            plot3(coords_plot(ii,1),coords_plot(ii,2),coords_plot(ii,3), 'o', 'MarkerSize', cfg.MarkerSize, 'MarkerFaceColor', cfg.MarkerFaceColor, 'MarkerEdgeColor', cfg.MarkerEdgeColor);
+
         end
         
         if ~isempty(cfg.chan_highlight)

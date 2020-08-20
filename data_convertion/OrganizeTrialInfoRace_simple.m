@@ -24,7 +24,7 @@ for i = 1:length(block_names)
         
         %         get the race info of the patient
         if strcmp(K.subID(1),'A') || strcmp(K.subID(1),'C') || strcmp(K.subID(1),'F')
-            race = 1; % race = 1 for Asia; race = 2 for Black; race = 3 for White %%%need to be nodified here
+            race = 1; % rdddace = 1 for Asia; race = 2 for Black; race = 3 for White %%%need to be nodified here
         elseif strcmp(K.subID(1),'B')
             race = 2;
         elseif strcmp(K.subID(1),'W')
@@ -41,6 +41,10 @@ for i = 1:length(block_names)
                     race = 3
                 case 'S20_150_CM'
                     race = 3
+                case 'S17_114_EB'
+                    race = 3
+                case 'S20_152_HT'
+                    race = 1
             end
         else
             error('Please define the race condition of patient; race = 1 for Asian, race = 2 for Black, race = 3 for white')
@@ -88,6 +92,10 @@ for i = 1:length(block_names)
         elseif strcmp(sbj_name, 'S20_148_SM')
             gender = 1;
         elseif strcmp(sbj_name,'S20_150_CM')
+            gender = 1;
+        elseif strcmp(sbj_name,'S17_114_EB')
+            gender = 1;
+        elseif strcmp(sbj_name,'S20_152_HT')
             gender = 1;
         elseif strcmp(sbj_name, 'C18_32')
             gender = 1;
@@ -206,6 +214,10 @@ for i = 1:length(block_names)
                     race = 3;
                 case 'S20_150_CM'
                     race = 3;
+                case 'S17_114_EB'
+                    race = 3;
+                case 'S20_152_HT'
+                    race = 1;
             end
         else
             error('Please define the race condition of patient; race = 1 for Asian, race = 2 for Black, race = 3 for white')
@@ -251,6 +263,10 @@ for i = 1:length(block_names)
         elseif strcmp(sbj_name, 'S19_145_PC')
             gender = 1;
         elseif strcmp(sbj_name, 'S20_148_SM')
+            gender = 1;
+        elseif strcmp(sbj_name,'S17_114_EB')
+            gender = 1;
+        elseif strcmp(sbj_name, 'S20_152_HT')
             gender = 1;
         elseif strcmp(sbj_name, 'C18_32')
             gender = 1;
@@ -401,6 +417,13 @@ for i = 1:length(block_names)
         end
     end
     
+    for i=1:size(trialinfo.pa_judg,1)
+        if trialinfo.pa_judg(i)==1
+            trialinfo.judg{i}='same';
+        else trialinfo.pa_judg(i)==0
+            trialinfo.judg{i}='diff';
+        end
+    end
     
     save([globalVar.psych_dir '/trialinfo_', bn '.mat'], 'trialinfo');
 end
@@ -455,3 +478,14 @@ end
 %
 %    end
 %    a = a(2:2:216)'
+
+
+%%
+for i=1:size(trialinfo.pa_judg,1)
+    if trialinfo.pa_judg(i)==1
+        trialinfo.judg{i}='same';
+    else trialinfo.pa_judg(i)==0
+        trialinfo.judg{i}='diff';
+    end
+end
+    

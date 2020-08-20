@@ -3,6 +3,8 @@ function coords_plot = CorrectElecLoc(coords, views, hemisphere, correction_fact
 %% Function to optimize electrode location for plotting
 
 coords_plot = coords;
+coords_plot = coords.MNI_coord; %added Clara is this helpful
+
 % correction_factor = 0;
 switch views
     case {'lateral', 'frontal', 'parietal'}

@@ -54,6 +54,11 @@ for i = 1:length(block_names)
             
     end
     
+    if strcmp(sbj_name,'S17_114_EB') && strcmp(project_name,'race_encoding_simple')
+        n_stim_per_trial = 4
+    else
+    end 
+    
     %% Load globalVar
     load(sprintf('%s/originalData/%s/global_%s_%s_%s.mat',dirs.data_root,sbj_name,project_name,sbj_name,bn));
     iEEG_rate=globalVar.iEEG_rate;
@@ -80,13 +85,13 @@ for i = 1:length(block_names)
     %% Add exceptions
     [n_initpulse_onset, n_initpulse_offset] = EventIdentifierExceptions(sbj_name, project_name, bn, n_initpulse_onset, n_initpulse_offset);
     
+    
     %% Thresholding the signal
     if strcmp(project_name, 'Calculia_production')
         ind_above= pdio < -5;
     elseif strcmp(sbj_name, 'S16_102_MDO') && strcmp(bn, 'E16-993_0007')
         pdio = abs(pdio);
         ind_above= pdio > 2;
-        
         %     elseif strcmp(project_name, 'Calculia_production_stim')
         %         ind_above= pdio > 2.2;
         
@@ -154,6 +159,11 @@ for i = 1:length(block_names)
         clear stim_offset stim_onset
         stim_offset= [pdio_offset(isi_ind)];
         stim_onset= [pdio_onset(isi_ind)];
+    elseif strcmp(sbj_name, 'S17_114_EB') && strcmp(project_name, 'race_encoding_simple')
+        isi_ind = find(IpdioI > 0.001);
+         stim_offset= [pdio_offset(isi_ind) pdio_offset(end)];
+        stim_onset= [pdio_onset(isi_ind) pdio_onset(end)];
+        
     else
         isi_ind = find(IpdioI > 0.1);
         clear stim_offset stim_onset
@@ -271,8 +281,24 @@ for i = 1:length(block_names)
 %     all_stim_onset = test;
     
     %% Plot comparison photo/trigger
+    
+        %S19_145_PC - issue because ran stim trials, so it compliments for most
+    %of them, but not the last three 
+    %df_SOT is 119
+    %df_stim_onset is 119
+    
+    
     df_SOT= diff(StimulusOnsetTime)';
     df_stim_onset = diff(all_stim_onset(:,1))';
+    
+    if strcmp(sbj_name,  'S19_145_PC') && strcmp(project_name, 'SevenHeaven')
+        for i=117:120
+            %df_stim_onset(i-1) = df_SOT(i-1)
+            all_stim_onset(i) = all_stim_onset(i-1) + df_SOT(i-1)
+        end
+        df_SOT= diff(StimulusOnsetTime)';
+        df_stim_onset = diff(all_stim_onset(:,1))';
+    end
     
     %plot overlay
     subplot(2,3,4)
@@ -280,6 +306,8 @@ for i = 1:length(block_names)
     hold on
     plot(df_stim_onset,'r*') % photodiode/trigger
     df= df_SOT - df_stim_onset;
+    
+    
     
     %% Plot diffs, across experiment and histogram
     subplot(2,3,5)
@@ -331,7 +359,7 @@ for i = 1:length(block_names)
     for ti = 1:size(trialinfo,1)
         trialinfo.RT_lock(ti) = trialinfo.RT(ti) + trialinfo.allonsets(ti,trialinfo.nstim(ti));
     end
-    trialinfo.allonsets(rest_trials,:) = (trialinfo.StimulusOnsetTime(rest_trials,:)-trialinfo.StimulusOnsetTime(rest_trials-1,:))+trialinfo.allonsets(rest_trials-1,:);
+%    trialinfo.allonsets(rest_trials,:) = (trialinfo.StimulusOnsetTime(rest_trials,:)-trialinfo.StimulusOnsetTime(rest_trials-1,:))+trialinfo.allonsets(rest_trials-1,:);
     
     
     %% Exception for when only the first onset is detected in calculia.

@@ -62,7 +62,8 @@ end
 
 % 
 % if nargin == 1
-%     correction_factor = 0;
+    cfg.correction_factor = 0;
+    cfg.alpha = 1;
 %     ifsave = false;
 % elseif nargin == 2
 %     ifsave = false;

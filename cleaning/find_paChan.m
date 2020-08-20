@@ -118,7 +118,9 @@ if isempty(pathological_chan)
     pathological_chan_id=[];
 else
     for i=1:length(pathological_chan)
-        pathological_chan_id(i)=find(strcmp(pathological_chan{i},chanNames));
+        %pathological_chan_id(i)=find(strcmp(pathological_chan{i},chanNames));
+       test=find(strcmp(pathological_chan{i},chanNames));
+        pathological_chan_id(i) = test(1)
     end
 end
 
