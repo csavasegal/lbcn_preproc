@@ -100,6 +100,7 @@ end
 
 np = get(gcf,'nextplot');
 set(gcf,'nextplot','add');
+
 if (oldtitle),
 	delete(oldtitle);
 end
